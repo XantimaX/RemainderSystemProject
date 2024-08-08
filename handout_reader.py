@@ -49,7 +49,6 @@ def handout_reader_pdf(pdf_file) :
         elif "Evaluation" in cols[i] :
             position_of_evaluation = i
 
-    print(course_name)
     components = components.to_numpy()
     for component in components :
         component_name = component[position_of_evaluation]
@@ -92,13 +91,15 @@ def handout_reader_word (word_file) :
             break
         elif cell and "date" in cell.text.lower() :
             date_location = i
-        elif cell and "components" in cell.text.lower() :
+        elif cell and "evaluation" in cell.text.lower() :
             component_location = i
 
-    print(course_name)
+
+
     for row in correct_table.rows[1:] :
         component_name = row.cells[component_location].text
         component_date = row.cells[date_location].text
+
         component_details = extract_details(component_name=component_name, component_date=component_date)
         if (component_details) :
             details.append([course_name, component_details[0], component_details[1]])
