@@ -1,7 +1,12 @@
 import re
 
+
+#Given components
 components = ('quiz', 'midsem', 'compre')
+
+#Remove any number suffixes(like st, nd , rd  ex: 3rd)
 number_suffixes = "stndrdth"
+
 month_dict = {
     "january"       : '01',
     "february"      : '02',
@@ -17,8 +22,10 @@ month_dict = {
     "december"      : '12'
 }
 
-def extract_details(component_name,component_date) :
 
+
+def extract_details(component_name,component_date) :
+    
     component_name_list = component_name.split(' ')
     for i,component_name in enumerate(component_name_list) :
         component_name_list[i] = component_name.lower().strip()

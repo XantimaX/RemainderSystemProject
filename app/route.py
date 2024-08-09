@@ -5,9 +5,22 @@ from handout_reader import handout_reader_pdf,handout_reader_word
 from sorting import sort_dates
 from re import search
 from excel_sheet_generator import create_excel_sheet
+from app.forms import RegisterForm, LoginForm
+
+
 @app.route("/")
 def index():
     return render_template("home.html")
+
+@app.route("/login", methods = ["GET","POST"])
+def login():
+    login_form = LoginForm()
+    return render_template("login.html", login_form=login_form)
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    register_form = RegisterForm()
+    return render_template("register.html", register_form = register_form)
 
 @app.route("/upload_menu" , methods = ["GET", "POST"])
 def upload_menu() :
@@ -45,7 +58,6 @@ def create_or_download():
 
     session["valid_details"] = details[:invalid_index]
     return render_template("create_or_download.html", valid_details=details[:invalid_index], invalid_details=details[invalid_index:])
-
 
 @app.route("/download_excel")
 def download_excel():
