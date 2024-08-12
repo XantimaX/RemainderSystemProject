@@ -1,12 +1,13 @@
-from app import app
-from flask import render_template, redirect, request,url_for,session,send_from_directory
+from app import app,login
+from flask import render_template, redirect, request,url_for,session,send_from_directory,flash,get_flashed_messages,jsonify
 from app.forms import Upload
 from handout_reader import handout_reader_pdf,handout_reader_word
 from sorting import sort_dates
 from re import search
 from excel_sheet_generator import create_excel_sheet
 from app.forms import RegisterForm, LoginForm
-
+from dbms_methods import add_user, search_user,give_reminder_records,add_reminder_record
+from flask_login import current_user, login_user, logout_user,login_required
 
 @app.route("/")
 def index():
@@ -14,13 +15,48 @@ def index():
 
 @app.route("/login", methods = ["GET","POST"])
 def login():
+    if current_user.is_authenticated :
+        return redirect(url_for("index"))
     login_form = LoginForm()
-    return render_template("login.html", login_form=login_form)
+    if login_form.validate_on_submit() :
+        user = search_user(login_form.username.data)
+        if user :
+            if user.check_password(login_form.password.data) :
+                login_user(user)
+                return redirect(url_for("index"))
+            flash("Invalid Password")
+        else :
+            flash("User not found")
+    else :
+        print(login_form.errors)
+
+    return render_template("login.html", login_form=login_form )
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     register_form = RegisterForm()
+
+    if register_form.validate_on_submit() :
+        if (add_user(register_form)) :
+            flash("Account Created Successfully ! Please Login", "success")
+        else :
+            flash("Error : Username already exists", "error")
+
+    else :
+        print(register_form.errors)
+
     return render_template("register.html", register_form = register_form)
+
+@app.route("/logout")
+def logout() :
+    logout_user()
+    return redirect(url_for("index"))
+
+@app.route("/reminder_view")
+@login_required
+def reminder_view():
+    reminder_records = give_reminder_records(current_user)
+    return render_template("reminder.html", reminder_records=reminder_records)
 
 @app.route("/upload_menu" , methods = ["GET", "POST"])
 def upload_menu() :
@@ -29,6 +65,7 @@ def upload_menu() :
         redirect(url_for("upload"))
 
     return render_template("upload.html", upload=upload)
+
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
     details = []
@@ -58,6 +95,15 @@ def create_or_download():
 
     session["valid_details"] = details[:invalid_index]
     return render_template("create_or_download.html", valid_details=details[:invalid_index], invalid_details=details[invalid_index:])
+
+@login_required
+@app.route("/reminder", methods = ["POST"])
+def add_reminders():
+    data = request.json
+    details = data["details"]
+    for detail in details :
+        add_reminder_record(detail,current_user)
+    return jsonify({'message': 'Reminders added successfully!'})
 
 @app.route("/download_excel")
 def download_excel():
