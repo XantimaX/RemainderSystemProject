@@ -37,5 +37,7 @@ class Reminder(db.Model):
     component_name : Mapped[String] = Column(String(50) ,nullable = False)
     date : Mapped[Date] = Column(Date,nullable = False)
     user_id :Mapped[int] = Column(Integer, ForeignKey("user.user_id"))
-
+    
     user : Mapped[User] = relationship("User", back_populates="reminder")
+
+

@@ -1,0 +1,37 @@
+<style>
+    #login_form {
+        width:50%;
+    }
+</style>
+
+{% extends "home.html" %}
+
+{% block content %}
+    <form action = "" method = "POST" novalidate>
+
+        {{ login_form.hidden_tag()}}
+
+        <div class="flex flex-col justify-center items-center">
+        <h1 class="text-6xl">LOGIN</h1>
+        <div id="login_form" class="bg-gray-300 rounded-sm grid grid-cols-2 gap-y-5 gap-x-5 p-2">
+            
+            <div >{{login_form.username.label}} :</div> 
+            <div >{{login_form.username(size=30)}}</div>
+            
+            <div >{{login_form.password.label}} :</div> 
+            <div >{{login_form.password(size=30)}}</div>
+
+            {% with messages = get_flashed_messages() %}
+                {% for message in messages %}
+                    <div class = "text-red-600 col-span-2 text-center"> {{message}}</div>
+                {% endfor %}
+            {% endwith %}
+
+            <a href = "{{url_for('register')}}" class = "text-blue-700 col-span-2 text-center">Click Here to Register</a>
+        </div>
+        <span>{{login_form.submit(class_ = "rounded bg-green-500  hover:bg-green-700 text-white")}}</span> 
+    </div>
+
+    </form> 
+    
+{% endblock %}

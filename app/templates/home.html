@@ -1,0 +1,21 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+
+
+<div class="bg-gray-300 flex justify-center content-center m-10 rounded">
+    <button id = "upload_handout" type="button" class=" bg-blue-500 shadow hover:bg-blue-700   text-white p-2 rounded h-1/2 m-5" >Upload Handouts</button>
+    <button id = "view_reminder" type="button" class="bg-green-500 hover:bg-green-700  text-white p-2 rounded h-1/2 m-5">View Reminder</button>
+</div>
+
+<script>
+    document.getElementById("upload_handout").addEventListener('click', () => {
+        window.location.href = "{{ url_for('upload_menu') }}"
+    })
+    document.getElementById("view_reminder").addEventListener('click', () => {
+        window.location.href = "{{ url_for('reminder_view') }}"
+    })
+</script>
+
+{% endblock %}

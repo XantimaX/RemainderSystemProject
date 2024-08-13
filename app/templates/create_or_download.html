@@ -1,9 +1,10 @@
 {% extends "header.html" %}
 
-
 {% block content %}
     
     <div >
+
+        {% if valid_details %}
         <h1 class="text-4xl text-center m-3">LIST OF COMPONENTS</h1>
         <ul id = "valid_component_list" class="grid grid-cols-3 border-2 border-blue-950 m-3">
             {% for detail in valid_details %}
@@ -13,13 +14,14 @@
             {% endfor %}
         </ul>
 
-        {% if valid_details %}
             <div class="flex justify-center content-center" style = "height:40px;">
                 <button type="button" class=" w-1/6 rounded bg-green-500  hover:bg-green-700 text-white">
                     <a href = "{{url_for('download_excel')}}">DOWNLOAD LIST</a>
                 </button>
-                <button id = "reminder_converter" type="button" class=" w-1/6 rounded bg-green-500  hover:bg-green-700 text-white">CONVERT TO REMINDER LIST</button>
+                <button id = "reminder_converter" type="button" class=" w-1/6 rounded bg-green-500  hover:bg-green-700 text-white">ADD TO REMINDER LIST</button>
             </div>
+        {% else %}
+            <div class = "text-black text-center">Nothing To Show</div>
         {% endif %}
 
         {% if invalid_details %}

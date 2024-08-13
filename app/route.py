@@ -8,6 +8,7 @@ from excel_sheet_generator import create_excel_sheet
 from app.forms import RegisterForm, LoginForm
 from dbms_methods import add_user, search_user,give_reminder_records,add_reminder_record
 from flask_login import current_user, login_user, logout_user,login_required
+from datetime import datetime, date
 
 @app.route("/")
 def index():
@@ -56,7 +57,7 @@ def logout() :
 @login_required
 def reminder_view():
     reminder_records = give_reminder_records(current_user)
-    return render_template("reminder.html", reminder_records=reminder_records)
+    return render_template("reminder.html", reminder_records=reminder_records, current_date = date.today())
 
 @app.route("/upload_menu" , methods = ["GET", "POST"])
 def upload_menu() :
@@ -71,6 +72,8 @@ def upload():
     details = []
     files = request.files.getlist("file")
     for file in files :
+        if file.filename == "" :
+            continue
         filename = file.filename
         filepath = rf"{app.config['UPLOAD_FOLDER']}\{filename}"
         file.save(filepath)

@@ -1,0 +1,27 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+    {% if reminder_records %}
+        <div class = "grid grid-cols-3 justify-center items-center">
+        {% for reminder_record in reminder_records %}
+             {% if (reminder_record.date - current_date).days < 5 %}   
+            <li style = "list-style-type: none;" class = "bg-red-700 text-center border-2 border-black"> {{ reminder_record.course_name }}</li>
+            <li style = "list-style-type: none;" class = "bg-red-700 text-center border-2 border-black"> {{ reminder_record.component_name }}</li>
+            <li style = "list-style-type: none;" class = "bg-red-700 text-center border-2 border-black"> {{ (reminder_record.date - current_date).days }} days left</li>
+            {% elif (reminder_record.date - current_date).days < 10 %}
+            <li style = "list-style-type: none;" class = "bg-orange-700 text-center border-2 border-black"> {{ reminder_record.course_name }}</li>
+            <li style = "list-style-type: none;" class = "bg-orange-700 text-center border-2 border-black"> {{ reminder_record.component_name }}</li>
+            <li style = "list-style-type: none;" class = "bg-orange-700 text-center border-2 border-black"> {{ (reminder_record.date - current_date).days }} days left</li>
+            {% else %}
+            <li style = "list-style-type: none;" class = "bg-green-700 text-center border-2 border-black"> {{ reminder_record.course_name }}</li>
+            <li style = "list-style-type: none;" class = "bg-green-700 text-center border-2 border-black"> {{ reminder_record.component_name }}</li>
+            <li style = "list-style-type: none;" class = "bg-green-700 text-center border-2 border-black"> {{ (reminder_record.date - current_date).days }} days left</li>
+            {% endif %}
+        {% endfor %}
+        </div>
+    {% else %}
+        <div>Nothing To Show</div>
+    {% endif %}
+
+{% endblock %}
