@@ -1,0 +1,11 @@
+{% extends "header.html" %}
+
+{% block content %}
+    <form action = "/upload" method = "POST" , enctype = "multipart/form-data">
+        {{ upload.hidden_tag() }}
+        <div class="bg-gray-300 flex justify-center content-center m-10 rounded" >
+            <input type="file" name="file" class="m-5" multiple />
+            <div class="bg-green-500 hover:bg-green-700  text-white p-2 rounded h-1/2 m-5">> {{  upload.submit_button() }} </div>
+        </div>
+    </form>
+{% endblock %}

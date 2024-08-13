@@ -1,0 +1,43 @@
+<style>
+    #login_form {
+        width:50%;
+    }
+</style>
+
+{% extends "home.html" %}
+
+{% block content %}
+    <div class="flex flex-col justify-center items-center">
+        <h1 class="text-6xl">REGISTER</h1>
+        <form action = "" method = "POST" novalidate>
+            {{ register_form.hidden_tag() }}
+            <div id="register_form" class="bg-gray-300 rounded-sm grid grid-cols-2 gap-y-5 gap-x-5 p-2">
+                <div >{{register_form.username.label}} :</div>
+                <div >{{register_form.username(size=30)}}</div>
+            
+                <div >{{register_form.email.label}}</div>
+                <div >{{register_form.email(size=30)}}</div>
+            
+                <div >{{register_form.password.label}} :</div>
+                <div >{{register_form.password(size=30)}}</div>
+                <div >{{register_form.password_repeat.label}}</div>
+                <div >{{register_form.password_repeat(size=30)}}</div>
+            
+                {% with messages = get_flashed_messages(with_categories = True) %}
+                    {%if messages %}
+                        {% if messages[0][0] == "success" %}
+                         <div class = "text-green-600 col-span-2 text-center"> {{messages[0][1]}}</div>
+                        {% else %}
+                         <div class = "text-red-600 col-span-2 text-center"> {{messages[0][1]}}</div>
+                         {% endif %}
+                    {% endif %}
+                {% endwith %}
+                <a href = "{{url_for('login')}}" class = " text-blue-700 col-span-2 text-center">Click Here to Login</a>
+            </div>
+            <span>{{register_form.submit( class_=" rounded bg-green-500  hover:bg-green-700 text-white")}}</span>
+        </form>
+    </div>
+
+    
+
+{% endblock %}
