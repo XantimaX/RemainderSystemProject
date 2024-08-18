@@ -23,25 +23,29 @@
         {% else %}
             <div class = "text-black text-center">Nothing To Show</div>
         {% endif %}
-
+            
         {% if invalid_details %}
-        <ul id="invalid_component_list" class="border-2 border-blue-950 m-3">
+        <h1 class="text-4xl text-center m-3">INVALID COMPONENT DATES</h1>
+        <ul id="invalid_component_list" class=" grid grid-cols-3 border-2 border-blue-950 m-3">
             {% for detail in invalid_details %}
-                <li  id = "invalid_component_list_item" contenteditable="true"> {{detail}}</li>
+                <div   class = "invalid_course text-center border border-black"  contenteditable="true"> {{detail[0]}}</div>
+                <div    class = "invalid_component text-center border border-black"  contenteditable="true"> {{detail[1]}}</div>
+                <div   class = "invalid_date text-center border border-black"  contenteditable="true"> {{detail[2]}}</div>
             {% endfor %}
         </ul>
+        <div class = "w-full flex justify-center items-center"><button id = "component_list_adder" type="button" class=" w-1/6 rounded bg-green-500  hover:bg-green-700 text-white">ADD TO COMPONENT LIST</button></div>
         {% endif %}
-
     </div>
 
 <script>
+
+    //deals with the addition to reminder list
     reminder_endpoint = "{{url_for('add_reminders')}}";
     valid_details = {{valid_details | tojson}};
     redirect_url = "{{url_for('reminder_view')}}";
     document.getElementById("reminder_converter").addEventListener("click", () => {
             console.log("Reminder..");
-            console.log(valid_details);
-
+            oonsole.log(valid_details);
             fetch(reminder_endpoint, {
             method: 'POST',
                 headers: {
@@ -52,14 +56,50 @@
             if (!response.ok){
                  throw new Error('Network response was not ok');
             }
-            return response.json();
            }).then(data =>{
             window.location.href = redirect_url;
            }).catch(error => {
             console.error('There was a problem with the fetch operation:', error);
            });
     });
-</script>
 
+    //deals with adding the invalid components to the component list if the dates are valid
+    document.getElementById("component_list_adder").addEventListener("click", () => {
+        invalid_courses = document.getElementsByClassName("invalid_course")
+        invalid_components = document.getElementsByClassName("invalid_component")
+        invalid_dates = document.getElementsByClassName("invalid_date")
+        
+        valid_date_regex = /\d{2}\/\d{2}\/(\d{2}|\d{4})/
+        valid_indexes = []
+        for (let i = 0 ; i < invalid_dates.length ; i ++){
+            console.log(invalid_dates[i].textContent)
+            console.log(invalid_dates[i].textContent.match(valid_date_regex))
+            if (invalid_dates[i].textContent.match(valid_date_regex))
+                valid_indexes.push(i)
+        }
+
+        valid_courses = []
+        valid_indexes.forEach(index => {
+            valid_courses.push([invalid_courses[index].textContent.trim(), invalid_components[index].textContent.trim(), invalid_dates[index].textContent.trim()])
+        })
+
+        console.log("valid_courses : " + valid_courses)
+        const component_adder_endpoint = '{{url_for("add_component")}}'
+
+        fetch(component_adder_endpoint, {
+            method : "POST",
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify({
+                valid_course : valid_courses
+            })
+        }).then(response => {
+            window.location.href = '{{url_for("create_or_download")}}'
+        }).catch(error => {
+            console.error(error)
+        })
+    })
+</script>
 
 {% endblock %}

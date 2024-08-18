@@ -34,7 +34,7 @@ def remove_expired_reminder_records(current_user):
     db.session.commit()
 
 def add_reminder_record(reminder_detail, current_user):
-
+    print(reminder_detail)
     date_arr = reminder_detail[2].split("/")
     date_arr[2] = date_arr[2] if len(date_arr[2]) == 4 else "20" + date_arr[2]
 
