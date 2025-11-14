@@ -45,7 +45,7 @@
     redirect_url = "{{url_for('reminder_view')}}";
     document.getElementById("reminder_converter").addEventListener("click", () => {
             console.log("Reminder..");
-            oonsole.log(valid_details);
+            console.log(valid_details);
             fetch(reminder_endpoint, {
             method: 'POST',
                 headers: {
@@ -56,6 +56,7 @@
             if (!response.ok){
                  throw new Error('Network response was not ok');
             }
+            return response.json(); 
            }).then(data =>{
             window.location.href = redirect_url;
            }).catch(error => {
